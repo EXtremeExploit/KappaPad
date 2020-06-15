@@ -1,48 +1,54 @@
-
-
 #include <CapacitiveSensor.h>
 #include <Keyboard.h>
 
-#include "capacitiveKey.h"
+#include "CapacitiveKey.h"
 
-//#define SERIAL_OUTPUT
-#define DISABLE_PIN 15
+#define SERIAL_OUTPUT
+#define DISABLE_PIN 13
 
 void setup() {
-  #ifdef SERIAL_OUTPUT
+#ifdef SERIAL_OUTPUT
   Serial.begin(115200);
-  #endif
+#endif
   Keyboard.begin();
   pinMode(DISABLE_PIN, INPUT_PULLUP);
 }
 
-CapacitiveKey key0 = CapacitiveKey(
-  2,    //Capacitive Send Pin
-  7,    //Capacitive Sense Pin
-  6,    //LED Pin
-  6,    //Capacitive Treshold
-  'z',  //Keyboard Key
-  255   //LED Brightness (0-255)
-);
-CapacitiveKey key1 = CapacitiveKey(
-  4,    //Capacitive Send Pin
-  8,    //Capacitive Sense Pin
-  10,   //LED Pin
-  5,    //Capacitive Treshold
-  'x',  //Keyboard Key
-  255   //LED Brightness (0-255)
-);
+CapacitiveKey keys[] = {
+  CapacitiveKey(
+    2,    //Capacitive Send Pin
+    A5,    //Capacitive Sense Pin
+    12,    //Capacitive Treshold
+    'x'  //Keyboard Key
+  ),
+
+  CapacitiveKey(
+    2,
+    A4,
+    12,
+    'd'
+  )
+};
+
+int keysLength = sizeof(keys) / sizeof(keys[0]);
 
 void loop() {
   bool keyboardActive = digitalRead(DISABLE_PIN);
-  key0.keyUpdate(keyboardActive);
-  key1.keyUpdate(keyboardActive);
+  for (int i = 0; i < keysLength; i++) {
+    keys[i].keyUpdate(keyboardActive);
+  }
 
-  #ifdef SERIAL_OUTPUT
-  Serial.print(key0.sample);
-  Serial.print(",");
-  Serial.println(key1.sample);
-  #endif
+#ifdef SERIAL_OUTPUT
+  for (int i = 0; i < keysLength; i++) {
+    if (keys[i].sample < 10) Serial.print ("  ");
+    else if (keys[i].sample < 100) Serial.print(" ");
+
+    if (i == keysLength - 1)
+      Serial.println(String("Key#" + String(i) + ":" + keys[i].sample));
+    else {
+      Serial.print(String("Key#" + String(i) + ":" + keys[i].sample));
+      Serial.print("   ");
+    }
+  }
+#endif
 }
-
-
