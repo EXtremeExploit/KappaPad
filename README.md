@@ -36,10 +36,12 @@ The keys were made out of sheet aluminum, with wires crimped to provide a secure
 
 ### Software
 
-The Arduino Sketch is located in the KappaPad directory of this repository. It requires the [CapacitiveSensor library](https://github.com/PaulStoffregen/CapacitiveSensor) so install that first. 
+The Arduino Sketch is located in the KappaPad directory of this repository. It requires the [CapacitiveSensor library](https://github.com/PaulStoffregen/CapacitiveSensor) so install that first from: Sketch > Import Library > Manage Libraries. 
 
-Make sure the correct pin numbers are given where the CapacitiveKey classes are initialized, and make sure the disable pin (15 by default) is accessible on your board.
+Change the PINS you will use in KappaPad.ino.
+
+* **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET ARE SUPPORTED FOR OPTIMIZATIONS (a-z)**
 
 Upload the sketch to the board using the appropriate board type. (Use Arduino Leonardo if you have a Pro Micro.) After uploading, note that your board may recieve a different serial port number.
 
-At this point the keyboard may work, or the treshold values may have to be adjusted. If keys act like they are being held down and your computer is now unusable when the keypad is plugged in, connect a wire from the disable pin to ground to stop keypresses from being sent. If the keys do not work, uncomment the `#DEFINE SERIAL_OUTPUT` and reupload the sketch. Now, when you open the Arduino serial monitor (at 115200 baud) you should see the sensed capacitance for each key. Change the tresholds so that they are just above the largest values you see when not touching the keys, and reupload the sketch. Once you are satisfied with the operation of the keyboard, disable serial output again to improve performance.
+At this point the keyboard may work, or the treshold values may have to be adjusted. If keys act like they are being held down and your computer is now unusable when the keypad is plugged in, Comment the line that says `Keyboard.press(key);` inside `CapacitiveKey.h`  and enable serial output by uncommenting `SERIAL_OUTPUT` in `KappaPad.ino`, that will show you the threshold the sensor is now, put it 1+ to the highest value you see when not touching the pads, disable serial output again to improve performance.

@@ -22,15 +22,14 @@ public:
   {
     delete sensor;
   }
-  void keyUpdate(bool keyboardActive)
+  void keyUpdate()
   {
     sample = sensor->capacitiveSensorRaw(1);
     if (sample > treshold)
     {
       if (keyReleased)
       {
-        if (keyboardActive)
-          Keyboard.press(key);
+        Keyboard.press(key);
         keyReleased = false;
       }
       releaseTimer = releaseDelay;
