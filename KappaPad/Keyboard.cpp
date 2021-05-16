@@ -298,39 +298,39 @@ size_t Keyboard_::release(uint8_t k)
 	return 1;
 }
 
-void Keyboard_::releaseAll(void)
-{
-	_keyReport.keys[0] = 0;
-	_keyReport.keys[1] = 0;	
-	_keyReport.keys[2] = 0;
-	_keyReport.keys[3] = 0;	
-	_keyReport.keys[4] = 0;
-	_keyReport.keys[5] = 0;	
-	_keyReport.modifiers = 0;
-	sendReport(&_keyReport);
-}
+// void Keyboard_::releaseAll(void)
+// {
+// 	_keyReport.keys[0] = 0;
+// 	_keyReport.keys[1] = 0;	
+// 	_keyReport.keys[2] = 0;
+// 	_keyReport.keys[3] = 0;	
+// 	_keyReport.keys[4] = 0;
+// 	_keyReport.keys[5] = 0;	
+// 	_keyReport.modifiers = 0;
+// 	sendReport(&_keyReport);
+// }
 
-size_t Keyboard_::write(uint8_t c)
-{
-	uint8_t p = press(c);  // Keydown
-	release(c);            // Keyup
-	return p;              // just return the result of press() since release() almost always returns 1
-}
+// size_t Keyboard_::write(uint8_t c)
+// {
+// 	uint8_t p = press(c);  // Keydown
+// 	release(c);            // Keyup
+// 	return p;              // just return the result of press() since release() almost always returns 1
+// }
 
-size_t Keyboard_::write(const uint8_t *buffer, size_t size) {
-	size_t n = 0;
-	while (size--) {
-		if (*buffer != '\r') {
-			if (write(*buffer)) {
-			  n++;
-			} else {
-			  break;
-			}
-		}
-		buffer++;
-	}
-	return n;
-}
+// size_t Keyboard_::write(const uint8_t *buffer, size_t size) {
+// 	size_t n = 0;
+// 	while (size--) {
+// 		if (*buffer != '\r') {
+// 			if (write(*buffer)) {
+// 			  n++;
+// 			} else {
+// 			  break;
+// 			}
+// 		}
+// 		buffer++;
+// 	}
+// 	return n;
+// }
 
 Keyboard_ Keyboard;
 

@@ -1,4 +1,4 @@
-#include <CapacitiveSensor.h>
+#include "CapacitiveSensor.h"
 #include "Keyboard.h"
 
 #include "CapacitiveKey.h"
@@ -30,6 +30,8 @@ CapacitiveKey key1 = {
 void loop() {
   key0.keyUpdate();
   key1.keyUpdate();
+
+  
 
 #ifdef SERIAL_OUTPUT
   Serial.println(String(key0.sample) + "-" + String(key1.sample));
