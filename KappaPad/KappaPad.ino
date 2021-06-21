@@ -7,44 +7,58 @@
 
 void setup() {
 #ifdef SERIAL_OUTPUT
-  Serial.begin(115200);
+	Serial.begin(115200);
 #endif
-  Keyboard.begin();
+	Keyboard.begin();
 }
 
 CapacitiveKey key0 = {
-  
-    3,    //Capacitive Send Pin
-    A2,    //Capacitive Sense Pin
-    5,    //Capacitive Treshold
-    'x'  //Keyboard Key
+	3,   //Capacitive Send Pin
+	A2,  //Capacitive Sense Pin
+	5,   //Capacitive Treshold
+	'k'  //Keyboard Key
 };
 
 CapacitiveKey key1 = {
-    2,
-    A0,
-    6,
-    'd'
+	2,   //Capacitive Send Pin
+	A0,  //Capacitive Sense Pin
+	6,   //Capacitive Treshold
+	'l'  //Keyboard Key
 };
 
 void loop() {
-  key0.keyUpdate();
-  key1.keyUpdate();
+	bool kbEnable = Keyboard.getLedStatus() & 0b10;
+	key0.keyUpdate(kbEnable);
+	key1.keyUpdate(kbEnable);
 
-  
+	if (kbEnable) {
+		//PORTB = PORTB | 0b00100000;
+		digitalWrite(13, HIGH);
+	}else{
+		//PORTB = PORTB & 0b11011111;
+		digitalWrite(13, LOW);
+	}
 
 #ifdef SERIAL_OUTPUT
-  Serial.println(String(key0.sample) + "-" + String(key1.sample));
-  // for (int i = 0; i < keysLength; i++) {
-  //   if (keys[i].sample < 10) Serial.print ("  ");
-  //   else if (keys[i].sample < 100) Serial.print(" ");
+	Serial.println(String(key0.sample) + "-" + String(key1.sample));
 
-  //   if (i == keysLength - 1)
-  //     Serial.println(String("Key#" + String(i) + ":" + keys[i].sample));
-  //   else {
-  //     Serial.print(String("Key#" + String(i) + ":" + keys[i].sample));
-  //     Serial.print("   ");
-  //   }
-  // }
+	uint8_t ledStatus = Keyboard.getLedStatus();
+	Serial.print("ledStatus: ");
+	Serial.println(ledStatus, BIN);
+
+	Serial.print("kbEnable:  ");
+	Serial.println(kbEnable, BIN);
+
+	// for (int i = 0; i < keysLength; i++) {
+	//   if (keys[i].sample < 10) Serial.print ("  ");
+	//   else if (keys[i].sample < 100) Serial.print(" ");
+
+	//   if (i == keysLength - 1)
+	//     Serial.println(String("Key#" + String(i) + ":" + keys[i].sample));
+	//   else {
+	//     Serial.print(String("Key#" + String(i) + ":" + keys[i].sample));
+	//     Serial.print("   ");
+	//   }
+	// }
 #endif
 }

@@ -60,52 +60,7 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 // Public Methods //////////////////////////////////////////////////////////////
 // Functions available in Wiring sketches, this library, and other libraries
 
-long CapacitiveSensor::capacitiveSensor(uint8_t samples)
-{
-	total = 0;
-	if (samples == 0) return 0;
-	if (error < 0) return -1;            // bad pin
-
-
-	for (uint8_t i = 0; i < samples; i++) {    // loop for samples parameter - simple lowpass filter
-		if (SenseOneCycle() < 0)  return -2;   // variable over timeout
-}
-
-		// only calibrate if time is greater than CS_AutocaL_Millis and total is less than 10% of baseline
-		// this is an attempt to keep from calibrating when the sensor is seeing a "touched" signal
-
-		if ( (millis() - lastCal > CS_AutocaL_Millis) && abs(total  - leastTotal) < (int)(.10 * (float)leastTotal) ) {
-
-			// Serial.println();               // debugging
-			// Serial.println("auto-calibrate");
-			// Serial.println();
-			// delay(2000); */
-
-			leastTotal = 0x0FFFFFFFL;          // reset for "autocalibrate"
-			lastCal = millis();
-		}
-		/*else{                                // debugging
-			Serial.print("  total =  ");
-			Serial.print(total);
-
-			Serial.print("   leastTotal  =  ");
-			Serial.println(leastTotal);
-
-			Serial.print("total - leastTotal =  ");
-			x = total - leastTotal ;
-			Serial.print(x);
-			Serial.print("     .1 * leastTotal = ");
-			x = (int)(.1 * (float)leastTotal);
-			Serial.println(x);
-		} */
-
-	// routine to subtract baseline (non-sensed capacitance) from sensor return
-	if (total < leastTotal) leastTotal = total;                 // set floor value to subtract from sensed value
-	return(total - leastTotal);
-
-}
-
-long CapacitiveSensor::capacitiveSensorRaw(uint8_t samples)
+long CapacitiveSensor::capacitiveSensorRaw()
 {
 	total = 0;
 	if (error < 0) return -1;                  // bad pin - this appears not to work
@@ -113,19 +68,6 @@ long CapacitiveSensor::capacitiveSensorRaw(uint8_t samples)
 	if (SenseOneCycle() < 0)  return -2;   // variable over timeout
 
 	return total;
-}
-
-
-void CapacitiveSensor::reset_CS_AutoCal(void){
-	leastTotal = 0x0FFFFFFFL;
-}
-
-void CapacitiveSensor::set_CS_AutocaL_Millis(unsigned long autoCal_millis){
-	CS_AutocaL_Millis = autoCal_millis;
-}
-
-void CapacitiveSensor::set_CS_Timeout_Millis(unsigned long timeout_millis){
-	CS_Timeout_Millis = (timeout_millis * (float)loopTimingFactor * (float)F_CPU) / 16000000;  // floats to deal with large numbers
 }
 
 // Private Methods /////////////////////////////////////////////////////////////
