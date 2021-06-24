@@ -48,17 +48,5 @@ void loop() {
 
 	Serial.print("kbEnable:  ");
 	Serial.println(kbEnable, BIN);
-
-	// for (int i = 0; i < keysLength; i++) {
-	//   if (keys[i].sample < 10) Serial.print ("  ");
-	//   else if (keys[i].sample < 100) Serial.print(" ");
-
-	//   if (i == keysLength - 1)
-	//     Serial.println(String("Key#" + String(i) + ":" + keys[i].sample));
-	//   else {
-	//     Serial.print(String("Key#" + String(i) + ":" + keys[i].sample));
-	//     Serial.print("   ");
-	//   }
-	// }
 #endif
 }

@@ -17,17 +17,17 @@ struct CapacitiveKey
 	~CapacitiveKey() {
 		delete sensor;
 	}
-
 	void keyUpdate(bool kbEnabled) {
+#ifdef SERIAL_OUTPUT
 		sample = sensor->capacitiveSensorRaw();
-		if (sample > treshold) {
+		if (sample > treshold && kbEnabled) {
 			if (keyReleased && kbEnabled) {
 				Keyboard.press(key);
 				keyReleased = false;
 			}
 			releaseTimer = releaseDelay;
 		} else {
-			if (!keyReleased && kbEnabled) {
+			if (!keyReleased) {
 				if (releaseTimer == 0) {
 					Keyboard.release(key);
 					keyReleased = true;
@@ -36,5 +36,32 @@ struct CapacitiveKey
 				}
 			}
 		}
+#endif
+#ifndef SERIAL_OUTPUT
+		if(kbEnabled) {
+			sample = sensor->capacitiveSensorRaw();
+			if (sample > treshold) {
+				if (keyReleased) {
+					Keyboard.press(key);
+					keyReleased = false;
+				}
+			releaseTimer = releaseDelay;
+			} else {
+				if (!keyReleased) {
+					if (releaseTimer == 0) {
+						Keyboard.release(key);
+						keyReleased = true;
+					} else {
+						releaseTimer--;
+					}
+				}
+			}
+		}else{
+			if(!keyReleased) {
+				Keyboard.release(key);
+				keyReleased = true;
+			}
+		}
+#endif
 	}
 };

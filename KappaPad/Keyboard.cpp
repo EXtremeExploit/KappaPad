@@ -339,8 +339,7 @@ size_t Keyboard_::write(const uint8_t *buffer, size_t size) {
 
 uint8_t Keyboard_::getLedStatus()
 {
-	uint8_t _keyboardLedsStatus = HID().getKeyboardLedsStatus();
-	return _keyboardLedsStatus;
+	return HID().getKeyboardLedsStatus();
 }
 
 Keyboard_ Keyboard;
