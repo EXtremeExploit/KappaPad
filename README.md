@@ -2,8 +2,6 @@
 
 KappaPad is a two-button keypad intended for playing osu!. Unlike other keypads with mechanical switches, KappaPad has fixed metal pads and uses capacitive sensing to determine when they are being pressed. Because there is no key travel, one can minimize the distance their fingers move to conserve stamina during long streams.
 
-![KappaPad](images/full.jpg?raw=true)
-
 ## Usage
 
 Just plug the KappaPad into a computer, and it should work as a USB keyboard, with the keys bound to Z and X. (The key bindings can be changed in the Arduino sketch.)
@@ -30,15 +28,22 @@ Components Used
 * Solid-Core Wire
 * Common-Cathode RGB LED
 
-All of the electronics were connected by a small breadboard. An [Arduino Pro Micro](https://www.sparkfun.com/products/12640)-compatible board was used as the microcontroller. Other boards that can act as a USB keyboard can be used, such as Arduino Leonardo, Arduino Zero, Arduino Due, and Teensy. The optional LED will light up red or green depending on which key was pressed. It was mounted pointing downwards in a hole in the acrylic base to provide illumination all around the edges.
+All of the electronics were connected by a small breadboard. An [Arduino Pro Micro](https://www.sparkfun.com/products/12640)-compatible board was used as the microcontroller. Other boards that can act as a USB keyboard can be used, such as Arduino Leonardo, Arduino Zero, Arduino Due, and Teensy.
+
+### Compatibility
+
+#### If your board/chip isn't here it doesn't mean it doesn't work, its just not tested
+
+* ATMega 32u4
+    * Arduino Leonardo
 
 The keys were made out of sheet aluminum, with wires crimped to provide a secure electrical connection. Any metal objects can be used for the keys. The size and material of the objects will determine the treshold values when calibrating the keyboard.
 
 ### Software
 
-The Arduino Sketch is located in the KappaPad directory of this repository. It requires the [CapacitiveSensor library](https://github.com/PaulStoffregen/CapacitiveSensor) so install that first from: Sketch > Import Library > Manage Libraries. 
+The Arduino Sketch is located in the KappaPad directory of this repository.
 
-Change the PINS you will use in KappaPad.ino.
+* **Change the pins and keys you will use in KappaPad.ino.**
 
 * **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET ARE SUPPORTED FOR OPTIMIZATIONS (a-z)**
 
