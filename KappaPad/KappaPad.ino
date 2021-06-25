@@ -5,13 +5,6 @@
 
 //#define SERIAL_OUTPUT
 
-void setup() {
-#ifdef SERIAL_OUTPUT
-	Serial.begin(115200);
-#endif
-	Keyboard.begin();
-}
-
 CapacitiveKey key0 = {
 	3,   //Capacitive Send Pin
 	A2,  //Capacitive Sense Pin
@@ -25,6 +18,24 @@ CapacitiveKey key1 = {
 	6,   //Capacitive Treshold
 	'l'  //Keyboard Key
 };
+
+
+void setup() {
+#ifdef SERIAL_OUTPUT
+	Serial.begin(115200);
+#endif
+
+	if (key0.key < 'a' || key0.key > 'z' ||
+	key1.key < 'a' || key1.key > 'z' ||
+	key0.sendPin == 13 || key0.sensePin == 13 ||
+	key1.sendPin == 13 || key1.sensePin == 13)
+	{
+		while (1) {
+			digitalWrite(LED_BUILTIN, (millis() / 1000) % 2);
+		}
+	}
+	Keyboard.begin();
+}
 
 void loop() {
 	bool kbEnable = Keyboard.getLedStatus() & 0b10;

@@ -8,10 +8,15 @@ struct CapacitiveKey
 	unsigned int releaseTimer;
 	unsigned int treshold;
 	unsigned int sample;
-	CapacitiveKey(uint8_t sendPin, uint8_t receivePin, unsigned int capacitiveTreshold, char keyboardKey) {
-		sensor = new CapacitiveSensor(sendPin, receivePin);
+	uint8_t sendPin;
+	uint8_t sensePin;
+	CapacitiveKey(uint8_t _sendPin, uint8_t _sensePin, unsigned int capacitiveTreshold, char keyboardKey) {
+		sensor = new CapacitiveSensor(_sendPin, _sensePin);
 		treshold = capacitiveTreshold;
 		key = keyboardKey;
+
+		sendPin = _sendPin;
+		sensePin = _sensePin;
 	}
 
 	~CapacitiveKey() {
