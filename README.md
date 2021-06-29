@@ -15,27 +15,24 @@ There aren't any plans to sell these yet, but it is fairly simple to build your 
 The base should ideally be heavy and have a non-slip surface on the bottom. The keypad pictured has a base made out of 3/8 inch (~1cm) acrylic, with rubber feet on the bottom. Components were attached with double-sided foam tape.
 
 ### Electronics
-
-![Closeup of Electronics](images/electronics.jpg?raw=true)
-
 Components Used
 
-* 170 Point Breadboard
-* Clone of Arduino Pro Micro
-* 2x 100 Ohm Resistor
-* 1x 220 Ohm Resistor
+* Breadboard
+* Arduino Leonardo
 * 2x 330 kOhm Resistor
 * Solid-Core Wire
-* Common-Cathode RGB LED
+* 2 coins (for touch, can be anything conductive)
 
-All of the electronics were connected by a small breadboard. An [Arduino Pro Micro](https://www.sparkfun.com/products/12640)-compatible board was used as the microcontroller. Other boards that can act as a USB keyboard can be used, such as Arduino Leonardo, Arduino Zero, Arduino Due, and Teensy.
+All of the electronics were connected by a small breadboard. An Arduino Leonardo was used. Other boards that can act as a USB keyboard can be used, such as Arduino Pro Micro, Arduino Zero, Arduino Due, and Teensy.
 
 ### Compatibility
 
 #### If your board/chip isn't here it doesn't mean it doesn't work, its just not tested
-
-* ATMega 32u4
-    * Arduino Leonardo
+##### Working
+* ATmega32u4
+##### Not working
+* ATmega328P
+* ATmega2560
 
 The keys were made out of sheet aluminum, with wires crimped to provide a secure electrical connection. Any metal objects can be used for the keys. The size and material of the objects will determine the treshold values when calibrating the keyboard.
 
@@ -45,7 +42,7 @@ The Arduino Sketch is located in the KappaPad directory of this repository.
 
 * **Change the pins and keys you will use in KappaPad.ino.**
 
-* **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET ARE SUPPORTED FOR OPTIMIZATIONS (a-z)**
+# **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET ARE SUPPORTED FOR OPTIMIZATIONS (a-z)**
 
 Upload the sketch to the board using the appropriate board type. (Use Arduino Leonardo if you have a Pro Micro.) After uploading, note that your board may recieve a different serial port number.
 

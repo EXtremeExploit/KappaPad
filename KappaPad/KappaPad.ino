@@ -19,6 +19,7 @@ CapacitiveKey key1 = {
 	'l'  //Keyboard Key
 };
 
+bool kbEnable = false;
 
 void setup() {
 #ifdef SERIAL_OUTPUT
@@ -34,20 +35,25 @@ void setup() {
 			digitalWrite(LED_BUILTIN, (millis() / 1000) % 2);
 		}
 	}
-	Keyboard.begin();
 }
 
 void loop() {
-	bool kbEnable = Keyboard.getLedStatus() & 0b10;
+	kbEnable = Keyboard.getLedStatus() & 0b10;
 	key0.keyUpdate(kbEnable);
 	key1.keyUpdate(kbEnable);
 
 	if (kbEnable) {
-		//PORTB = PORTB | 0b00100000;
-		digitalWrite(13, HIGH);
-	}else{
-		//PORTB = PORTB & 0b11011111;
-		digitalWrite(13, LOW);
+		#ifdef __AVR_ATmega32U4__
+			PORTC |= 0b10000000;
+		#else
+			digitalWrite(LED_BUILTIN, HIGH);
+		#endif
+	} else {
+		#ifdef __AVR_ATmega32U4__
+			PORTC &= 0b01111111;
+		#else
+			digitalWrite(LED_BUILTIN, LOW);
+		#endif
 	}
 
 #ifdef SERIAL_OUTPUT

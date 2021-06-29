@@ -22,10 +22,10 @@ struct CapacitiveKey
 	~CapacitiveKey() {
 		delete sensor;
 	}
-	void keyUpdate(bool kbEnabled) {
+	void keyUpdate(bool& kbEnabled) {
 #ifdef SERIAL_OUTPUT
 		sample = sensor->capacitiveSensorRaw();
-		if (sample > treshold && kbEnabled) {
+		if (sample > treshold) {
 			if (keyReleased && kbEnabled) {
 				Keyboard.press(key);
 				keyReleased = false;
@@ -50,7 +50,7 @@ struct CapacitiveKey
 					Keyboard.press(key);
 					keyReleased = false;
 				}
-			releaseTimer = releaseDelay;
+				releaseTimer = releaseDelay;
 			} else {
 				if (!keyReleased) {
 					if (releaseTimer == 0) {

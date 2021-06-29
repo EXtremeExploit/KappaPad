@@ -60,7 +60,7 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 // Public Methods //////////////////////////////////////////////////////////////
 // Functions available in Wiring sketches, this library, and other libraries
 
-long CapacitiveSensor::capacitiveSensorRaw()
+long CapacitiveSensor::capacitiveSensorRaw() //Return -1 if pins are wrong, -2 if failed to sense
 {
 	total = 0;
 	if (error < 0) return -1;                  // bad pin - this appears not to work
@@ -119,7 +119,6 @@ int CapacitiveSensor::SenseOneCycle(void)
 
 	if (total >= CS_Timeout_Millis) {
 		return -2;     // total variable over timeout
-	} else {
-		return 1;
 	}
+	return 1;
 }

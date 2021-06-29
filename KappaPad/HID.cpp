@@ -86,6 +86,7 @@ void HID_::AppendDescriptor(HIDSubDescriptor *node)
 	descriptorSize += node->length;
 }
 
+inline int SendReport(uint8_t id, const void* data, int len) __attribute__((always_inline));
 int HID_::SendReport(uint8_t id, const void* data, int len)
 {
 	auto ret = USB_Send(pluggedEndpoint, &id, 1);
@@ -154,7 +155,7 @@ bool HID_::setup(USBSetup& setup)
 
 	return false;
 }
-
+inline uint8_t getKeyboardLedsStatus() __attribute__((always_inline));
 uint8_t HID_::getKeyboardLedsStatus(void)
 {
 	return _keyboardLedsStatus;
