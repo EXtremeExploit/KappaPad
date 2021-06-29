@@ -28,8 +28,8 @@ void setup() {
 
 	if (key0.key < 'a' || key0.key > 'z' ||
 	key1.key < 'a' || key1.key > 'z' ||
-	key0.sendPin == 13 || key0.sensePin == 13 ||
-	key1.sendPin == 13 || key1.sensePin == 13)
+	key0.sendPin == LED_BUILTIN || key0.sensePin == LED_BUILTIN ||
+	key1.sendPin == LED_BUILTIN || key1.sensePin == LED_BUILTIN)
 	{
 		while (1) {
 			digitalWrite(LED_BUILTIN, (millis() / 1000) % 2);

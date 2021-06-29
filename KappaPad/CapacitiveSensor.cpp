@@ -26,7 +26,6 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 {
 	// initialize this instance's variables
 	// Serial.begin(9600);		// for debugging
-	error = 1;
 	loopTimingFactor = 310;		// determined empirically -  a hack
 
 	CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
@@ -36,11 +35,6 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 	// Serial.println(CS_Timeout_Millis);
 
 	// get pin mapping and port for send Pin - from PinMode function in core
-
-#ifdef NUM_DIGITAL_PINS
-	if (sendPin >= NUM_DIGITAL_PINS) error = -1;
-	if (receivePin >= NUM_DIGITAL_PINS) error = -1;
-#endif
 
 	pinMode(sendPin, OUTPUT);						// sendpin to OUTPUT
 	pinMode(receivePin, INPUT);						// receivePin to INPUT
@@ -63,8 +57,6 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 long CapacitiveSensor::capacitiveSensorRaw() //Return -1 if pins are wrong, -2 if failed to sense
 {
 	total = 0;
-	if (error < 0) return -1;                  // bad pin - this appears not to work
-	
 	if (SenseOneCycle() < 0)  return -2;   // variable over timeout
 
 	return total;
