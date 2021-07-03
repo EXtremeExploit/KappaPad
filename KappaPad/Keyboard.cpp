@@ -28,46 +28,53 @@
 //	Keyboard
 
 static const uint8_t _hidReportDescriptor[] PROGMEM = {
+	//  Keyboard
+	0x05, 0x01,			// Usage page  1 (Generic Desktop)
+	0x09, 0x06,			// Usage 06 (Keyboard)
+	0xa1, 0x01,			// COLLECTION (Application)
 
-  //  Keyboard
-	0x05, 0x01,					// USAGE_PAGE (Generic Desktop)  // 47
-	0x09, 0x06,					// USAGE (Keyboard)
-	0xa1, 0x01,					// COLLECTION (Application)
-	0x85, 0x02,					//   REPORT_ID (2)
-	0x05, 0x07,					//   USAGE_PAGE (Keyboard)
+		// Setup
+		0x85, 0x02,		// REPORT_ID (2)
+		0x05, 0x07,		// Usage page (Keyboard)
 
-  0x19, 0xe0,					//   USAGE_MINIMUM (Keyboard LeftControl)
-	0x29, 0xe7,					//   USAGE_MAXIMUM (Keyboard Right GUI)
-	0x15, 0x00,					//   LOGICAL_MINIMUM (0)
-	0x25, 0x01,					//   LOGICAL_MAXIMUM (1)
-	0x75, 0x01,					//   REPORT_SIZE (1)
+		// Modifiers
+		0x19, 0xe0,		// Usage min: E0
+		0x29, 0xe7,		// Usage max: E7
+		0x15, 0x00,		// Logical min: 0
+		0x25, 0x01,		// Logical max: 1
+		0x75, 0x01,		// Report size: 1 bit
+		0x95, 0x08,		// Report Count (8)
+		0x81, 0x02,		// INPUT (Data,Var,Abs)
 
-  0x95, 0x08,					//   REPORT_COUNT (8)
-	0x81, 0x02,					//   INPUT (Data,Var,Abs)
-	0x95, 0x01,					//   REPORT_COUNT (1)
-	0x75, 0x08,					//   REPORT_SIZE (8)
-	0x81, 0x03,					//   INPUT (Cnst,Var,Abs)
+		// Reserved byte
+		0x95, 0x01,		// Report Count (1)
+		0x75, 0x08,		// Report size (8)
+		0x81, 0x03,		// INPUT (Cnst,Var,Abs)
 
-	0x95, 0x05,                    //   REPORT_COUNT (5)
-      0x75, 0x01,                    //   REPORT_SIZE (1)
-      0x05, 0x08,                    //   USAGE_PAGE (LEDs)
-      0x19, 0x01,                    //   USAGE_MINIMUM (1)
-      0x29, 0x05,                    //   USAGE_MAXIMUM (5)
-      0x91, 0x02,                    //   OUTPUT (Data,Var,Abs) // LED report
-      0x95, 0x01,                    //   REPORT_COUNT (1)
-      0x75, 0x03,                    //   REPORT_SIZE (3)
-      0x91, 0x01,                    //   OUTPUT (Constant) // padding
+		// LEDs
+		0x95, 0x05,		// Report Count: 5 reports
+		0x75, 0x01,		// Report size: 1 bit
+		0x05, 0x08,		// Usage page (LEDs)
+		0x19, 0x01,		// Usage min: 1
+		0x29, 0x05,		// Usage max: 5
+		0x91, 0x02,		// OUTPUT (Data,Var,Abs) // LED report
 
-  0x95, 0x06,					//   REPORT_COUNT (6)
-	0x75, 0x08,					//   REPORT_SIZE (8)
-	0x15, 0x00,					//   LOGICAL_MINIMUM (0)
-	0x25, 0x73,					//   LOGICAL_MAXIMUM (115)
-	0x05, 0x07,					//   USAGE_PAGE (Keyboard)
+		// LEDs padding
+		0x95, 0x01,		// Report Count: 1 report
+		0x75, 0x03,		// Report size: 3 bits
+		0x91, 0x01,		// OUTPUT (Constant)
 
-  0x19, 0x00,					//   USAGE_MINIMUM (Reserved (no event indicated))
-	0x29, 0x73,					//   USAGE_MAXIMUM (Keyboard Application)
-	0x81, 0x00,					//   INPUT (Data,Ary,Abs)
-	0xc0,						  // END_COLLECTION
+		// Actual keys
+		0x95, 0x06,		// Report Count: 6 reports
+		0x75, 0x08,		// Report size: 8 bits (1 byte)
+		0x15, 0x00,		// Logical min: 0
+		0x25, 0x73,		// Logical max: 115
+		0x05, 0x07,		// Usage page: Keyboard
+		0x19, 0x00,		// Usage min: 0
+		0x29, 0x73,		// Usage max 115 (F24)
+		0x81, 0x00,		// INPUT (Data,Ary,Abs)
+
+	0xc0,				// END_COLLECTION
 };
 
 Keyboard_::Keyboard_(void) {
@@ -88,8 +95,8 @@ void Keyboard_::sendReport(KeyReport* keys)
 // call release(), releaseAll(), or otherwise clear the report and resend.
 void Keyboard_::press(uint8_t k) {
 	if(_keyReport.keys[0] == 0x00)
-		_keyReport.keys[0] = k - 93;
-	else _keyReport.keys[1] = k - 93;
+		_keyReport.keys[0] = k;
+	else _keyReport.keys[1] = k;
 
 	sendReport(&_keyReport);
 }
@@ -98,7 +105,7 @@ void Keyboard_::press(uint8_t k) {
 // sends the report.  This tells the OS the key is no longer pressed and that
 // it shouldn't be repeated any more.
 void Keyboard_::release(uint8_t k) {
-	if(_keyReport.keys[0] == k - 93)
+	if(_keyReport.keys[0] == k)
 		_keyReport.keys[0] = 0x00;
 	else _keyReport.keys[1] = 0x00;
 

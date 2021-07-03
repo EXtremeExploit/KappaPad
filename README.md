@@ -10,10 +10,6 @@ Just plug the KappaPad into a computer, and it should work as a USB keyboard, wi
 
 There aren't any plans to sell these yet, but it is fairly simple to build your own. Here is an example of how to build one, but you don't have to follow it exactly. Just use the materials you have on hand.
 
-### Physical Construction
-
-The base should ideally be heavy and have a non-slip surface on the bottom. The keypad pictured has a base made out of 3/8 inch (~1cm) acrylic, with rubber feet on the bottom. Components were attached with double-sided foam tape.
-
 ### Electronics
 Components Used
 
@@ -42,7 +38,7 @@ The Arduino Sketch is located in the KappaPad directory of this repository.
 
 * **Change the pins and keys you will use in KappaPad.ino.**
 
-# **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET ARE SUPPORTED FOR OPTIMIZATIONS (a-z)**
+# **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET IS SUPPORTED FOR OPTIMIZATIONS (a-z)**
 
 Upload the sketch to the board using the appropriate board type. (Use Arduino Leonardo if you have a Pro Micro.) After uploading, note that your board may recieve a different serial port number.
 
