@@ -34,19 +34,14 @@
 //================================================================================
 //  Keyboard
 
-//  Low level key report: up to 2 keys at once
-typedef struct
-{
-	uint8_t modifiers;
-	uint8_t reserved;
-	uint8_t keys[2];
-} KeyReport;
+
+typedef uint8_t Keys[2];
 
 class Keyboard_
 {
 private:
-	KeyReport _keyReport;
-	void sendReport(KeyReport* keys);
+	Keys keys;
+	void sendReport(Keys);
 public:
 	Keyboard_(void);
 	void press(uint8_t k);

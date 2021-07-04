@@ -1,10 +1,8 @@
 #include "CapacitiveSensor.h"
 #include "Keyboard.h"
-
 #include "CapacitiveKey.h"
 
 //#define SERIAL_OUTPUT
-
 
 int main() {
 	init();
@@ -38,9 +36,7 @@ int main() {
 	key1.rawKey < 'a' || key1.rawKey > 'z' ||
 	key0.sendPin == LED_BUILTIN || key0.sensePin == LED_BUILTIN ||
 	key1.sendPin == LED_BUILTIN || key1.sensePin == LED_BUILTIN)
-		while (1) {
-			digitalWrite(LED_BUILTIN, (millis() / 1000) % 2);
-		}
+		while (1) digitalWrite(LED_BUILTIN, (millis() / 1000) % 2);
 
 	while(1) {
 		kbEnable = Keyboard.getLedStatus() & 0b10;
@@ -63,6 +59,7 @@ int main() {
 			}
 		}
 #endif
+
 		if (kbEnable) {
 			#if defined(__AVR_ATmega32U4__)
 				PORTC |= 0b10000000;

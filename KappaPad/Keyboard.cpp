@@ -30,7 +30,7 @@
 static const uint8_t _hidReportDescriptor[] PROGMEM = {
 	//  Keyboard
 	0x05, 0x01,			// Usage page  1 (Generic Desktop)
-	0x09, 0x06,			// Usage 06 (Keyboard)
+	0x09, 0x07,			// Usage 06 (Keypad)
 	0xa1, 0x01,			// COLLECTION (Application)
 
 		// Setup
@@ -38,18 +38,18 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
 		0x05, 0x07,		// Usage page (Keyboard)
 
 		// Modifiers
-		0x19, 0xe0,		// Usage min: E0
-		0x29, 0xe7,		// Usage max: E7
-		0x15, 0x00,		// Logical min: 0
-		0x25, 0x01,		// Logical max: 1
-		0x75, 0x01,		// Report size: 1 bit
-		0x95, 0x08,		// Report Count (8)
-		0x81, 0x02,		// INPUT (Data,Var,Abs)
+		// 0x19, 0xe0,		// Usage min: E0
+		// 0x29, 0xe7,		// Usage max: E7
+		// 0x15, 0x00,		// Logical min: 0
+		// 0x25, 0x01,		// Logical max: 1
+		// 0x75, 0x01,		// Report size: 1 bit
+		// 0x95, 0x08,		// Report Count (8)
+		// 0x81, 0x02,		// INPUT (Data,Var,Abs)
 
 		// Reserved byte
-		0x95, 0x01,		// Report Count (1)
-		0x75, 0x08,		// Report size (8)
-		0x81, 0x03,		// INPUT (Cnst,Var,Abs)
+		// 0x95, 0x01,		// Report Count (1)
+		// 0x75, 0x08,		// Report size (8)
+		// 0x81, 0x03,		// INPUT (Cnst,Var,Abs)
 
 		// LEDs
 		0x95, 0x05,		// Report Count: 5 reports
@@ -65,7 +65,7 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
 		0x91, 0x01,		// OUTPUT (Constant)
 
 		// Actual keys
-		0x95, 0x06,		// Report Count: 6 reports
+		0x95, 0x02,		// Report Count: 2 reports
 		0x75, 0x08,		// Report size: 8 bits (1 byte)
 		0x15, 0x00,		// Logical min: 0
 		0x25, 0x73,		// Logical max: 115
@@ -83,10 +83,10 @@ Keyboard_::Keyboard_(void) {
 }
 
 
-inline void sendReport(KeyReport* keys) __attribute__((always_inline));
-void Keyboard_::sendReport(KeyReport* keys)
+inline void sendReport(Keys) __attribute__((always_inline));
+void Keyboard_::sendReport(Keys)
 {
-	HID().SendReport(2, keys, sizeof(KeyReport));
+	HID().SendReport(2, keys, sizeof(keys));
 }
 
 // press() adds the specified key to the persistent key report and sends it.
@@ -94,28 +94,28 @@ void Keyboard_::sendReport(KeyReport* keys)
 // the host acts like the key remains pressed until we
 // call release(), releaseAll(), or otherwise clear the report and resend.
 void Keyboard_::press(uint8_t k) {
-	if(_keyReport.keys[0] == 0x00)
-		_keyReport.keys[0] = k;
-	else _keyReport.keys[1] = k;
+	if (keys[0] == 0x00)
+		keys[0] = k;
+	else keys[1] = k;
 
-	sendReport(&_keyReport);
+	sendReport(keys);
 }
 
 // release() takes the specified key out of the persistent key report and
 // sends the report.  This tells the OS the key is no longer pressed and that
 // it shouldn't be repeated any more.
 void Keyboard_::release(uint8_t k) {
-	if(_keyReport.keys[0] == k)
-		_keyReport.keys[0] = 0x00;
-	else _keyReport.keys[1] = 0x00;
+	if (keys[0] == k)
+		keys[0] = 0x00;
+	else keys[1] = 0x00;
 
-	sendReport(&_keyReport);
+	sendReport(keys);
 }
 
 inline uint8_t getLedStatus() __attribute__((always_inline));
 uint8_t Keyboard_::getLedStatus()
 {
-	return HID().getKeyboardLedsStatus();
+	return HID()._keyboardLedsStatus;
 }
 
 Keyboard_ Keyboard;
