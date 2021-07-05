@@ -26,11 +26,11 @@ struct CapacitiveKey
 	}
 
 #if defined(SERIAL_OUTPUT)
-	void keyUpdate(bool& kbEnabled) {
+	void keyUpdate(bool kbEnabled) {
 		sample = sensor->capacitiveSensorRaw();
 		if (sample > treshold) {
 			if (keyReleased) {
-				if(kbEnabled)
+				if (kbEnabled)
 					Keyboard.press(key);
 				keyReleased = false;
 			}

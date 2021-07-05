@@ -25,14 +25,13 @@
 CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 {
 	// initialize this instance's variables
-	// Serial.begin(9600);		// for debugging
+	//Serial.begin(9600);		// for debugging
 	loopTimingFactor = 310;		// determined empirically -  a hack
 
 	CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
-	CS_AutocaL_Millis = 20000;
 
 	// Serial.print("timwOut =  ");
-	// Serial.println(CS_Timeout_Millis);
+	//Serial.println(CS_Timeout_Millis);
 
 	// get pin mapping and port for send Pin - from PinMode function in core
 
@@ -45,10 +44,6 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 
 	rBit = PIN_TO_BITMASK(receivePin);				// get receive pin's ports and bitmask
 	rReg = PIN_TO_BASEREG(receivePin);
-
-	// get pin mapping and port for receive Pin - from digital pin functions in Wiring.c
-	leastTotal = 0x0FFFFFFFL;   // input large value for autocalibrate begin
-	lastCal = millis();         // set millis for start
 }
 
 // Public Methods //////////////////////////////////////////////////////////////
@@ -77,7 +72,7 @@ int CapacitiveSensor::SenseOneCycle(void)
 	DIRECT_WRITE_HIGH(sReg, sBit);	// sendPin High
     interrupts();
 
-	while ( !DIRECT_READ(rReg, rBit) && (total < CS_Timeout_Millis) ) {  // while receive pin is LOW AND total is positive value
+	while (!DIRECT_READ(rReg, rBit)) {  // while receive pin is LOW
 		total++;
 	}
 	//Serial.print("SenseOneCycle(1): ");
@@ -102,7 +97,7 @@ int CapacitiveSensor::SenseOneCycle(void)
 	delayMicroseconds(10);
 	DIRECT_MODE_INPUT(rReg, rBit);	// receivePin to INPUT (pullup is off)
 #else
-	while ( DIRECT_READ(rReg, rBit) && (total < CS_Timeout_Millis) ) {  // while receive pin is HIGH  AND total is less than timeout
+	while (DIRECT_READ(rReg, rBit)) {  // while receive pin is HIGH
 		total++;
 	}
 #endif

@@ -82,7 +82,6 @@ Keyboard_::Keyboard_(void) {
 	HID().AppendDescriptor(&node);
 }
 
-
 inline void sendReport(Keys) __attribute__((always_inline));
 void Keyboard_::sendReport(Keys)
 {
