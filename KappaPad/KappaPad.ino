@@ -1,8 +1,8 @@
+#include "config.h"
+#include "digitalWriteFast.h"
 #include "CapacitiveSensor.h"
 #include "Keyboard.h"
 #include "CapacitiveKey.h"
-
-//#define SERIAL_OUTPUT
 
 int main() {
 	init();
@@ -16,27 +16,22 @@ int main() {
 #endif
 
 	CapacitiveKey key0 = {
-		3,   //Capacitive Send Pin
-		A2,  //Capacitive Sense Pin
-		5,   //Capacitive Treshold
-		'k'  //Keyboard Key
+		key0SendPin,   //Capacitive Send Pin
+		key0SensePin,  //Capacitive Sense Pin
+		key0Treshold,   //Capacitive Treshold
+		key0char  //Keyboard Key
 	};
 
 	CapacitiveKey key1 = {
-		2,   //Capacitive Send Pin
-		A0,  //Capacitive Sense Pin
-		6,   //Capacitive Treshold
-		'l'  //Keyboard Key
+		key1SendPin,   //Capacitive Send Pin
+		key1SensePin,  //Capacitive Sense Pin
+		key1Treshold,   //Capacitive Treshold
+		key1char  //Keyboard Key
 	};
 
 	bool kbEnable = false;
 
-
-	if (key0.rawKey < 'a' || key0.rawKey > 'z' ||
-	key1.rawKey < 'a' || key1.rawKey > 'z' ||
-	key0.sendPin == LED_BUILTIN || key0.sensePin == LED_BUILTIN ||
-	key1.sendPin == LED_BUILTIN || key1.sensePin == LED_BUILTIN)
-		while (1) digitalWrite(LED_BUILTIN, (millis() / 1000) % 2);
+	checkConfig(key0,key1);
 
 	while(1) {
 		kbEnable = Keyboard.getLedStatus() & 0b10;
@@ -44,6 +39,15 @@ int main() {
 #if defined(SERIAL_OUTPUT)
 		key0.keyUpdate(kbEnable);
 		key1.keyUpdate(kbEnable);
+
+		Serial.println(String(key0.sample) + "-" + String(key1.sample));
+
+		uint8_t ledStatus = Keyboard.getLedStatus();
+		//Serial.print("ledStatus: ");
+		//Serial.println(ledStatus, BIN);
+
+		//Serial.print("kbEnable:  ");
+		//Serial.println(kbEnable, BIN);
 #else
 		if(kbEnable) {
 			key0.keyUpdate();
@@ -61,28 +65,17 @@ int main() {
 #endif
 
 		if (kbEnable) {
-			#if defined(__AVR_ATmega32U4__)
-				PORTC |= 0b10000000;
-			#else
-				digitalWrite(LED_BUILTIN, HIGH);
-			#endif
+			digitalWriteFast(onOffLED, HIGH);
 		} else {
-			#if defined(__AVR_ATmega32U4__)
-				PORTC &= 0b01111111;
-			#else
-				digitalWrite(LED_BUILTIN, LOW);
-			#endif
+			digitalWriteFast(onOffLED, LOW);
 		}
-
-	#if defined(SERIAL_OUTPUT)
-		Serial.println(String(key0.sample) + "-" + String(key1.sample));
-
-		uint8_t ledStatus = Keyboard.getLedStatus();
-		Serial.print("ledStatus: ");
-		Serial.println(ledStatus, BIN);
-
-		Serial.print("kbEnable:  ");
-		Serial.println(kbEnable, BIN);
-	#endif
 	}
+}
+
+void checkConfig(CapacitiveKey key0,CapacitiveKey key1){
+	if (key0.rawKey < 'a' || key0.rawKey > 'z' ||
+		key1.rawKey < 'a' || key1.rawKey > 'z' ||
+		key0.sendPin == onOffLED || key0.sensePin == onOffLED ||
+		key1.sendPin == onOffLED || key1.sensePin == onOffLED)
+			while (1) digitalWrite(onOffLED, (millis() / 1000) % 2);
 }
