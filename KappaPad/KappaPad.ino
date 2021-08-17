@@ -7,6 +7,24 @@
 int main() {
 	init();
 
+	CapacitiveKey key0 = {
+		key0SendPin,   //Capacitive Send Pin
+		key0SensePin,  //Capacitive Sense Pin
+		key0Threshold,   //Capacitive Threshold
+		key0Debounce, // Key Debounce
+		key0char  //Keyboard Key
+	};
+
+	CapacitiveKey key1 = {
+		key1SendPin,   //Capacitive Send Pin
+		key1SensePin,  //Capacitive Sense Pin
+		key1Threshold,   //Capacitive Threshold
+		key1Debounce, // Key Debounce
+		key1char  //Keyboard Key
+	};
+
+	checkConfig(key0,key1);
+
 #if defined(USBCON)
 	USBDevice.attach();
 #endif
@@ -15,23 +33,7 @@ int main() {
 	Serial.begin(115200);
 #endif
 
-	CapacitiveKey key0 = {
-		key0SendPin,   //Capacitive Send Pin
-		key0SensePin,  //Capacitive Sense Pin
-		key0Treshold,   //Capacitive Treshold
-		key0char  //Keyboard Key
-	};
-
-	CapacitiveKey key1 = {
-		key1SendPin,   //Capacitive Send Pin
-		key1SensePin,  //Capacitive Sense Pin
-		key1Treshold,   //Capacitive Treshold
-		key1char  //Keyboard Key
-	};
-
 	bool kbEnable = false;
-
-	checkConfig(key0,key1);
 
 	while(1) {
 		kbEnable = Keyboard.getLedStatus() & 0b10;
@@ -40,7 +42,24 @@ int main() {
 		key0.keyUpdate(kbEnable);
 		key1.keyUpdate(kbEnable);
 
-		Serial.println(String(key0.sample) + "-" + String(key1.sample));
+		if(key0.sample >= 0 && key1.sample >= 0) {
+			char* key0Sample = "";
+			char* key1Sample = "";
+
+			if(key0.sample < 10)
+				key0Sample = '0' + String(key0.sample).c_str();
+			if(key1.sample < 10)
+				key1Sample = '0' + String(key1.sample).c_str();
+
+			Serial.print(String(key0.sample));
+			Serial.print('-');
+			Serial.println(String(key1.sample));
+		} else {
+			if(key0.sample < 0)
+				Serial.println("Key0 throw error: " + String(key0.sample));
+			if(key1.sample < 0)
+				Serial.println("Key1 throw error: " + String(key1.sample));
+		}
 
 		uint8_t ledStatus = Keyboard.getLedStatus();
 		//Serial.print("ledStatus: ");

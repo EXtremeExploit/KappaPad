@@ -91,7 +91,7 @@ void Keyboard_::sendReport(Keys)
 // press() adds the specified key to the persistent key report and sends it.
 // Because of the way USB HID works,
 // the host acts like the key remains pressed until we
-// call release(), releaseAll(), or otherwise clear the report and resend.
+// call release(), or otherwise clear the report and resend.
 void Keyboard_::press(uint8_t k) {
 	if (keys[0] == 0x00)
 		keys[0] = k;
@@ -101,7 +101,7 @@ void Keyboard_::press(uint8_t k) {
 }
 
 // release() takes the specified key out of the persistent key report and
-// sends the report.  This tells the OS the key is no longer pressed and that
+// sends the report. This tells the OS the key is no longer pressed and that
 // it shouldn't be repeated any more.
 void Keyboard_::release(uint8_t k) {
 	if (keys[0] == k)

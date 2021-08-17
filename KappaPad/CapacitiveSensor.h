@@ -220,7 +220,7 @@ class CapacitiveSensor
 	IO_REG_TYPE rBit;    // receive pin's ports and bitmask
 	volatile IO_REG_TYPE *rReg;
   // methods
-	int SenseOneCycle(void);
+	void SenseOneCycle(void);
 };
 
 #endif

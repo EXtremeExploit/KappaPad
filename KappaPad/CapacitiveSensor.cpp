@@ -19,6 +19,8 @@
 
 #include "CapacitiveSensor.h"
 
+#define CS_Timeout_Millis ((2000 * (float)310 * (float)F_CPU) / 16000000)
+
 // Constructor /////////////////////////////////////////////////////////////////
 // Function that handles the creation and setup of instances
 
@@ -26,9 +28,9 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 {
 	// initialize this instance's variables
 	//Serial.begin(9600);		// for debugging
-	loopTimingFactor = 310;		// determined empirically -  a hack
+	//loopTimingFactor = 310;		// determined empirically -  a hack
 
-	CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
+	//CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
 
 	// Serial.print("timwOut =  ");
 	//Serial.println(CS_Timeout_Millis);
@@ -52,7 +54,7 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 long CapacitiveSensor::capacitiveSensorRaw() //Return -1 if pins are wrong, -2 if failed to sense
 {
 	total = 0;
-	if (SenseOneCycle() < 0)  return -2;   // variable over timeout
+	SenseOneCycle();   // variable over timeout
 
 	return total;
 }
@@ -60,7 +62,7 @@ long CapacitiveSensor::capacitiveSensorRaw() //Return -1 if pins are wrong, -2 i
 // Private Methods /////////////////////////////////////////////////////////////
 // Functions only available to other functions in this library
 
-int CapacitiveSensor::SenseOneCycle(void)
+void CapacitiveSensor::SenseOneCycle(void)
 {
     noInterrupts();
 	DIRECT_WRITE_LOW(sReg, sBit);	// sendPin Register low
@@ -72,14 +74,15 @@ int CapacitiveSensor::SenseOneCycle(void)
 	DIRECT_WRITE_HIGH(sReg, sBit);	// sendPin High
     interrupts();
 
-	while (!DIRECT_READ(rReg, rBit)) {  // while receive pin is LOW
+	while (!DIRECT_READ(rReg, rBit)  && (total < CS_Timeout_Millis)) {  // while receive pin is LOW
 		total++;
 	}
 	//Serial.print("SenseOneCycle(1): ");
 	//Serial.println(total);
 
 	if (total > CS_Timeout_Millis) {
-		return -2;         //  total variable over timeout
+		total = -1;         //  total variable over timeout
+		return;
 	}
 
 	// set receive pin HIGH briefly to charge up fully - because the while loop above will exit when pin is ~ 2.5V
@@ -97,15 +100,14 @@ int CapacitiveSensor::SenseOneCycle(void)
 	delayMicroseconds(10);
 	DIRECT_MODE_INPUT(rReg, rBit);	// receivePin to INPUT (pullup is off)
 #else
-	while (DIRECT_READ(rReg, rBit)) {  // while receive pin is HIGH
+	while (DIRECT_READ(rReg, rBit) && (total < CS_Timeout_Millis)) {  // while receive pin is HIGH
 		total++;
 	}
 #endif
 	//Serial.print("SenseOneCycle(2): ");
 	//Serial.println(total);
-
 	if (total >= CS_Timeout_Millis) {
-		return -2;     // total variable over timeout
+		total = -2;     // total variable over timeout
 	}
-	return 1;
+	return;
 }
