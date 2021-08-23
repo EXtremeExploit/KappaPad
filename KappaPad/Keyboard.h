@@ -22,7 +22,11 @@
 #ifndef KEYBOARD_h
 #define KEYBOARD_h
 
+#if defined(__AVR__)
 #include "HID.h"
+#else
+#include <HID.h>
+#endif
 
 #if !defined(_USING_HID)
 

@@ -1,10 +1,11 @@
 #include "config.h"
-#include "digitalWriteFast.h"
-#if onOffLED != -1
-#endif
 #include "CapacitiveSensor.h"
 #include "Keyboard.h"
 #include "CapacitiveKey.h"
+
+#if onOffLED != -1
+#include "digitalWriteFast.h"
+#endif
 
 int main() {
 	init();

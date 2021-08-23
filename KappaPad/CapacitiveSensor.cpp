@@ -21,7 +21,7 @@
 
 #define CS_Timeout_Millis ((2000 * (float)310 * (float)F_CPU) / 16000000)
 
-// Constructor /////////////////////////////////////////////////////////////////
+// Constructor
 // Function that handles the creation and setup of instances
 
 CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
@@ -33,7 +33,6 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 	//CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
 
 	// Serial.print("timwOut =  ");
-	//Serial.println(CS_Timeout_Millis);
 
 	// get pin mapping and port for send Pin - from PinMode function in core
 
@@ -41,14 +40,19 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 	pinMode(receivePin, INPUT);						// receivePin to INPUT
 	digitalWrite(sendPin, LOW);
 
+#if defined(__AVR__)
 	sBit = PIN_TO_BITMASK(sendPin);					// get send pin's ports and bitmask
 	sReg = PIN_TO_BASEREG(sendPin);					// get pointer to output register
 
 	rBit = PIN_TO_BITMASK(receivePin);				// get receive pin's ports and bitmask
 	rReg = PIN_TO_BASEREG(receivePin);
+#else
+	sPin = sendPin;
+	rPin = receivePin;
+#endif
 }
 
-// Public Methods //////////////////////////////////////////////////////////////
+// Public Methods
 // Functions available in Wiring sketches, this library, and other libraries
 
 long CapacitiveSensor::capacitiveSensorRaw() //Return -1 if pins are wrong, -2 if failed to sense
@@ -59,20 +63,26 @@ long CapacitiveSensor::capacitiveSensorRaw() //Return -1 if pins are wrong, -2 i
 	return total;
 }
 
-// Private Methods /////////////////////////////////////////////////////////////
+// Private Methods
 // Functions only available to other functions in this library
 
 void CapacitiveSensor::SenseOneCycle(void)
 {
-    noInterrupts();
-	DIRECT_WRITE_LOW(sReg, sBit);	// sendPin Register low
-	DIRECT_MODE_INPUT(rReg, rBit);	// receivePin to input (pullups are off)
-	DIRECT_MODE_OUTPUT(rReg, rBit); // receivePin to OUTPUT
-	DIRECT_WRITE_LOW(rReg, rBit);	// pin is now LOW AND OUTPUT
-	delayMicroseconds(10);
-	DIRECT_MODE_INPUT(rReg, rBit);	// receivePin to input (pullups are off)
+	#if defined(__AVR__)
+    noInterrupts(); // Disable interrupts
+
+	DIRECT_WRITE_LOW(sReg, sBit);	// sendPin low
+	DIRECT_MODE_INPUT(rReg, rBit);	// receivePin Input (pullups are off)
+
+	DIRECT_MODE_OUTPUT(rReg, rBit); // receivePin OUTPUT
+	DIRECT_WRITE_LOW(rReg, rBit);	// receivePin LOW
+
+	delayMicroseconds(10);			// 10 microseconds delay
+
+	DIRECT_MODE_INPUT(rReg, rBit);	// receivePin Input (pullups are off)
 	DIRECT_WRITE_HIGH(sReg, sBit);	// sendPin High
-    interrupts();
+
+    interrupts(); // Enable interrupts
 
 	while (!DIRECT_READ(rReg, rBit)  && (total < CS_Timeout_Millis)) {  // while receive pin is LOW
 		total++;
@@ -109,5 +119,45 @@ void CapacitiveSensor::SenseOneCycle(void)
 	if (total >= CS_Timeout_Millis) {
 		total = -2;     // total variable over timeout
 	}
+
+	#else // Pi pico
+
+	gpio_put(sPin, 0);
+	gpio_set_dir(rPin, 0);
+
+	gpio_set_dir(rPin, 1);
+	gpio_put(rPin, 0);
+
+	delay_us(10);
+
+	gpio_set_dir(rPin, 0);
+	gpio_put(sPin, 1);
+
+	while(gpio_get(rPin) && total < CS_Timeout_Millis)
+	{
+		total ++
+	}
+
+	if (total > CS_Timeout_Millis) {
+		total = -1;         //  total variable over timeout
+		return;
+	}
+
+	gpio_put(rPin, 1);
+	gpio_set_dir(rPin, 1);
+	gpio_put(rPin, 1);
+	gpio_set_dir(rPin, 0);
+	gpio_put(sPin, 0);
+
+	while (gpio_get(rPin) && (total < CS_Timeout_Millis)) {  // while receive pin is HIGH
+		total++;
+	}
+	if (total > CS_Timeout_Millis) {
+		total = -1;         //  total variable over timeout
+		return;
+	}
+
+	#endif
+
 	return;
 }

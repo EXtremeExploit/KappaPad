@@ -18,8 +18,6 @@
 
 #include "HID.h"
 
-#if defined(USBCON)
-
 HID_& HID()
 {
 	static HID_ obj;
@@ -160,5 +158,3 @@ HID_::HID_(void) : PluggableUSBModule(1, 1, epType),
 	epType[0] = EP_TYPE_INTERRUPT_IN;
 	PluggableUSB().plug(this);
 }
-
-#endif /* if defined(USBCON) */

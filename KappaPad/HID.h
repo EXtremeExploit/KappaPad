@@ -16,14 +16,11 @@
   SOFTWARE.
  */
 
-#ifndef HID_h
-#define HID_h
+#pragma once
 
 #include <stdint.h>
 #include <Arduino.h>
 #include <PluggableUSB.h>
-
-#if defined(USBCON)
 
 #define _USING_HID
 
@@ -120,6 +117,3 @@ HID_& HID();
 
 #define D_HIDREPORT(length) { 9, 0x21, 0x01, 0x01, 0, 1, 0x22, lowByte(length), highByte(length) }
 
-#endif // USBCON
-
-#endif // HID_h
