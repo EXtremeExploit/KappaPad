@@ -1,5 +1,7 @@
 #include "config.h"
 #include "digitalWriteFast.h"
+#if onOffLED != -1
+#endif
 #include "CapacitiveSensor.h"
 #include "Keyboard.h"
 #include "CapacitiveKey.h"
@@ -43,8 +45,8 @@ int main() {
 		key1.keyUpdate(kbEnable);
 
 		if(key0.sample >= 0 && key1.sample >= 0) {
-			char* key0Sample = "";
-			char* key1Sample = "";
+			char* key0Sample = '';
+			char* key1Sample = '';
 
 			if(key0.sample < 10)
 				key0Sample = '0' + String(key0.sample).c_str();
@@ -83,11 +85,13 @@ int main() {
 		}
 #endif
 
+#if onOffLED != -1
 		if (kbEnable) {
 			digitalWriteFast(onOffLED, HIGH);
 		} else {
 			digitalWriteFast(onOffLED, LOW);
 		}
+#endif
 	}
 }
 

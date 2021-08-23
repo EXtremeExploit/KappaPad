@@ -29,7 +29,7 @@ All of the electronics were connected by a small breadboard. An Arduino Leonardo
 The Arduino Sketch is located in the KappaPad directory of this repository.
 
 * **Change the pins and keys you will use in `config.h`.**
-* **If your board doesn't have onboard LED on pin 13, you can change it to custom LED or proper onboard LED**
+* **If your board doesn't have onboard LED on pin 13, you can change it to custom LED or proper onboard LED, or simply disable toggle led by setting it to -1**
 
 # **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET IS SUPPORTED FOR OPTIMIZATIONS (a-z)**
 
