@@ -1,11 +1,12 @@
 //Used for setup and debugging
-#define SERIAL_OUTPUT
+//#define SERIAL_OUTPUT
 //Used to disable keypresses when SERIAL_OUTPUT is defined
+//mainly use to change configs
 //#define ONLY_LOG
 
 // Which pin to send HIGH or LOW depending on whetever keypad will send keys or not
 // Use -1 if you don't want any LED for this
-#define onOffLED 13
+#define onOffLED -1
 
 /*Threshold:
 Threshold is how high the sample needs to be for it to count as a press.
@@ -39,6 +40,6 @@ too high above the threshold otherwise try with increments of 10*/
 //Key 1
 #define key1SendPin 4
 #define key1SensePin 5
-#define key1Threshold 4
-#define key1Debounce 100
+#define key1Threshold 3
+#define key1Debounce 50
 #define key1char 'l'

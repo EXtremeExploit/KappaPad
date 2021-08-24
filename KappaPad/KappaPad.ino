@@ -46,8 +46,8 @@ int main() {
 		key1.keyUpdate(kbEnable);
 
 		if(key0.sample >= 0 && key1.sample >= 0) {
-			char* key0Sample = '';
-			char* key1Sample = '';
+			char* key0Sample = "";
+			char* key1Sample = "";
 
 			if(key0.sample < 10)
 				key0Sample = '0' + String(key0.sample).c_str();

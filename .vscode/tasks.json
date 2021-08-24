@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "command": "arduino-cli compile --fqbn arduino:avr:leonardo -v --build-property \"compiler.cpp.extra_flags=\"-O2\"\" KappaPad/KappaPad.ino",
+            "type": "shell",
+            "label": "Compile",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "command": "arduino-cli compile --fqbn arduino:avr:leonardo --build-property \"compiler.cpp.extra_flags=\"-O2\"\" -u -v -p \"/dev/ttyACM0\" KappaPad/KappaPad.ino",
+            "type": "shell",
+            "label": "Upload",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}
