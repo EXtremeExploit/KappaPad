@@ -1,6 +1,13 @@
-struct CapacitiveKey
-{
-	CapacitiveSensor *sensor;
+#include "CapacitiveSensor.h"
+
+#if defined(__AVR__)
+#include "ArduinoKeyboard.h"
+#else
+#include "TUSBKeyboard.h"
+#endif
+
+struct CapacitiveKey {
+	CapacitiveSensor* sensor;
 	bool keyReleased = true;
 	uint8_t key;
 	char rawKey;
@@ -11,68 +18,17 @@ struct CapacitiveKey
 	long sample;
 	uint8_t sendPin;
 	uint8_t sensePin;
-	CapacitiveKey(uint8_t _sendPin, uint8_t _sensePin, unsigned int capacitiveThreshold, unsigned int _debounce, char keyboardKey) {
-		sendPin = _sendPin;
-		sensePin = _sensePin;
-		sensor = new CapacitiveSensor(_sendPin, _sensePin);
+	CapacitiveKey(uint8_t _sendPin,
+				  uint8_t _sensePin,
+				  unsigned int capacitiveThreshold,
+				  unsigned int _debounce,
+				  char keyboardKey);
 
-		threshold = capacitiveThreshold;
+	~CapacitiveKey();
 
-		debounceDefault = _debounce;
-
-		rawKey = keyboardKey;
-		key = keyboardKey - 93;
-
-	}
-
-	~CapacitiveKey() {
-		delete sensor;
-	}
-
-#if defined(SERIAL_OUTPUT)
-	void keyUpdate(bool kbEnabled) {
-		sample = sensor->capacitiveSensorRaw();
-		if(sample == -2)
-			return;
-#if !defined(ONLY_LOG)
-		if (kbEnabled)
-			if (sample > threshold) {
-			if (keyReleased) {
-						Keyboard.press(key);
-					keyReleased = false;
-				}
-				debounce = debounceDefault;
-			} else {
-				if (!keyReleased) {
-					if (debounce == 0) {
-						Keyboard.release(key);
-						keyReleased = true;
-					} else {
-						debounce--;
-					}
-				}
-			}
-#endif
-	}
+#if defined(SERIAL_DEBUG)
+	void keyUpdate(bool kbEnabled);
 #else
-	void keyUpdate() {
-		sample = sensor->capacitiveSensorRaw();
-		if (sample > threshold) {
-			if (keyReleased) {
-				Keyboard.press(key);
-				keyReleased = false;
-			}
-			debounce = debounceDefault;
-		} else {
-			if (!keyReleased) {
-				if (debounce == 0) {
-					Keyboard.release(key);
-					keyReleased = true;
-				} else {
-					debounce--;
-				}
-			}
-		}
-	}
+	void keyUpdate();
 #endif
 };

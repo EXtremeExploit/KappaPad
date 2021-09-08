@@ -19,41 +19,19 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KEYBOARD_h
-#define KEYBOARD_h
-
-#if defined(__AVR__)
 #include "HID.h"
-#else
-#include <HID.h>
-#endif
-
-#if !defined(_USING_HID)
-
-#warning "Using legacy HID core (non pluggable)"
-
-#else
-
-//================================================================================
-//================================================================================
-//  Keyboard
-
 
 typedef uint8_t Keys[2];
 
-class Keyboard_
-{
-private:
+class Keyboard_ {
+	private:
 	Keys keys;
-	void sendReport(Keys);
-public:
+	void sendReport();
+
+	public:
 	Keyboard_(void);
 	void press(uint8_t k);
 	void release(uint8_t k);
 	uint8_t getLedStatus();
 };
 extern Keyboard_ Keyboard;
-
-#endif
-#endif
-
