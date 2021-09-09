@@ -21,12 +21,11 @@ CapacitiveKey::~CapacitiveKey() {
 	delete sensor;
 }
 
-#if defined(SERIAL_DEBUG)
 void CapacitiveKey::keyUpdate(bool kbEnabled) {
 	sample = sensor->SenseOneCycle();
 	if (sample < 0)
 		return;
-		
+
 #if !defined(DISABLE_KEYS)
 	if (kbEnabled)
 		if (sample > threshold) {
@@ -45,10 +44,8 @@ void CapacitiveKey::keyUpdate(bool kbEnabled) {
 				}
 			}
 		}
-#endif
+#endif // !defined(DISABLE_KEYS)
 }
-
-#else
 void CapacitiveKey::keyUpdate() {
 	sample = sensor->SenseOneCycle();
 	if (sample > threshold) {
@@ -68,4 +65,3 @@ void CapacitiveKey::keyUpdate() {
 		}
 	}
 }
-#endif

@@ -26,9 +26,6 @@ struct CapacitiveKey {
 
 	~CapacitiveKey();
 
-#if defined(SERIAL_DEBUG)
 	void keyUpdate(bool kbEnabled);
-#else
 	void keyUpdate();
-#endif
 };
