@@ -19,29 +19,17 @@
 CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin) {
 	//CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
 
-#if defined(__AVR__)
 	sBase = PIN_TO_BASEREG(sendPin);  // get pointer to output register
 	sMask = PIN_TO_BITMASK(sendPin);  // get send pin's ports and bitmask
 	DIRECT_MODE_OUTPUT(sBase, sMask); // sendpin to OUTPUT
 
 	rBase = PIN_TO_BASEREG(receivePin);
 	rMask = PIN_TO_BITMASK(receivePin); // get receive pin's ports and bitmask
-#else
-	gpio_init(sendPin);
-	gpio_init(ReceivePin);
-
-	gpio_set_dir(sendPin, GPIO_OUTPUT);
-	gpio_set_dir(receivePin, GPIO_IN);
-
-	sPin = sendPin;
-	rPin = receivePin;
-#endif
 }
 
 long CapacitiveSensor::SenseOneCycle() {
 	total = 0;
 
-#if defined(__AVR__)
 	// set rPin HIGH briefly to charge up fully
 	DIRECT_MODE_OUTPUT(rBase, rMask); // rPin OUTPUT - pin is now HIGH AND OUTPUT
 	DIRECT_WRITE_HIGH(rBase, rMask);
@@ -53,37 +41,4 @@ long CapacitiveSensor::SenseOneCycle() {
 		total++;
 
 	return total < totalTimeout ? total : -1;
-
-#else // Pi pico
-
-	gpio_put(sPin, 0);
-	gpio_set_dir(rPin, 0);
-
-	gpio_set_dir(rPin, 1);
-	gpio_put(rPin, 0);
-
-	delay_us(10);
-
-	gpio_set_dir(rPin, 0);
-	gpio_put(sPin, 1);
-
-	while (gpio_get(rPin) && total < totalTimeout)
-		total++
-
-			if (total > totalTimeout) return -1L; //  total variable over timeout
-
-	gpio_put(rPin, 1);
-	gpio_set_dir(rPin, 1);
-	gpio_put(rPin, 1);
-	gpio_set_dir(rPin, 0);
-	gpio_put(sPin, 0);
-
-	while (gpio_get(rPin) && (total < totalTimeout)) // while receive pin is HIGH
-		total++;
-
-	if (total > totalTimeout)
-		return -2; //  total variable over timeout
-
-	return total;
-#endif
 }

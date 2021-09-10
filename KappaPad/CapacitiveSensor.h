@@ -11,17 +11,10 @@
 
 // ensure this library description is only included once
 
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
-#if !defined(__AVR__)
-#include "pico/stdlib.h"
-#else
 // Direct I/O through registers and bitmask (from OneWire library)
 
+#if defined(ARDUINO)
+#include "Arduino.h"
 #define PIN_TO_BASEREG(pin)            (portInputRegister(digitalPinToPort(pin)))
 #define PIN_TO_BITMASK(pin)            (digitalPinToBitMask(pin))
 #define DIRECT_READ(base, mask)        (((*(base)) & (mask)) ? 1 : 0)

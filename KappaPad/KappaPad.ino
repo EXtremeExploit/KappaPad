@@ -1,18 +1,16 @@
 #include "config.h"
 
 #if onOffLED != -1
+#if defined(__AVR__)
 #include "digitalWriteFast.h"
+#endif
 #endif
 
 #include "CapacitiveKey.h"
 
 int main() {
-#if defined(ARDUINO)
 	init();
 	USBDevice.attach();
-#else
-	Keyboard.begin();
-#endif
 
 	if (key0char < 'a' || key0char > 'z' || key1char < 'a' || key1char > 'z' || key0SendPin == onOffLED || key0SensePin == onOffLED || key1SendPin == onOffLED || key1SensePin == onOffLED)
 		while (1) digitalWrite(onOffLED, (millis() / 1000) % 2);
@@ -33,7 +31,7 @@ int main() {
 		key1char       //Keyboard Key
 	};
 
-	bool kbEnable = false;
+	bool kbEnable = true;
 
 	while (1) {
 		kbEnable = Keyboard.getLedStatus() & 0b10;
@@ -44,31 +42,27 @@ int main() {
 		key1.keyUpdate(kbEnable);
 		auto end = micros();
 
-		Serial.println(String(end - start) + "us");
+		Serial.print(String(end - start) + "us-");
 
 		if (key0.sample >= 0 && key1.sample >= 0) {
 			if (key0.sample < 10)
 				Serial.print(0);
 			Serial.print(key0.sample);
 
-			Serial.print('-');
+			Serial.print("-");
 
 			if (key1.sample < 10)
 				Serial.print(0);
 			Serial.println(key1.sample);
 		} else {
+			auto key0err = "Key0 throw error: " + key0.sample;
+			auto key1err = "Key1 throw error: " + key1.sample;
+
 			if (key0.sample < 0)
-				Serial.println("Key0 throw error: " + String(key1.sample));
+				Serial.println(key0err);
 			if (key1.sample < 0)
-				Serial.println("Key1 throw error: " + String(key1.sample));
+				Serial.println(key1err);
 		}
-
-		// uint8_t ledStatus = Keyboard.getLedStatus();
-		// Serial.print("ledStatus: ");
-		// Serial.println(ledStatus, BIN);
-
-		// Serial.print("kbEnable:  ");
-		// Serial.println(kbEnable, BIN);
 #else
 		if (kbEnable) {
 			key0.keyUpdate();

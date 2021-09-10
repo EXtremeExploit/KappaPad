@@ -1,5 +1,5 @@
 //Used mainly for debugging
-// #define SERIAL_DEBUG
+#define SERIAL_DEBUG
 
 //Used to disable keypresses when SERIAL_DEBUG is defined
 //Usefull for first setup
@@ -32,15 +32,15 @@ you may want to set it as 0 is the press is WAY (more than 25 stable)
 too high above the threshold otherwise try with increments of 5*/
 
 //Key 0
-#define key0SendPin 2
-#define key0SensePin 3
-#define key0Threshold 8
+#define key0SendPin A2
+#define key0SensePin A3
+#define key0Threshold 7
 #define key0Debounce 50
 #define key0char 'z'
 
 //Key 1
-#define key1SendPin 8
-#define key1SensePin 12
-#define key1Threshold 6
-#define key1Debounce 150
+#define key1SendPin A0
+#define key1SensePin A1
+#define key1Threshold 7
+#define key1Debounce 50
 #define key1char 'x'

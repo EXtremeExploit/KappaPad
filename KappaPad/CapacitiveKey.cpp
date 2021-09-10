@@ -17,10 +17,6 @@ CapacitiveKey::CapacitiveKey(uint8_t _sendPin,
 	key    = keyboardKey - 93;
 }
 
-CapacitiveKey::~CapacitiveKey() {
-	delete sensor;
-}
-
 void CapacitiveKey::keyUpdate(bool kbEnabled) {
 	sample = sensor->SenseOneCycle();
 	if (sample < 0)
