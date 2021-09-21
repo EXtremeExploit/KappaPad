@@ -13,7 +13,7 @@ int main() {
 	USBDevice.attach();
 
 	if (key0char < 'a' || key0char > 'z' || key1char < 'a' || key1char > 'z' || key0SendPin == onOffLED || key0SensePin == onOffLED || key1SendPin == onOffLED || key1SensePin == onOffLED)
-		while (1) digitalWrite(onOffLED, (millis() / 1000) % 2);
+		while (1) digitalWriteFast(onOffLED, (millis() / 1000) % 2);
 
 	CapacitiveKey key0 = {
 		key0SendPin,   //Capacitive Send Pin
