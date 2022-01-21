@@ -1,0 +1,6 @@
+{
+    "cmake.configureSettings":{
+        "CMAKE_MAKE_PROGRAM": "Unix Makefiles"
+    },
+    "cmake.generator": "Unix Makefiles"
+}

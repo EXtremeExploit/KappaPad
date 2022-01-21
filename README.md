@@ -2,37 +2,29 @@
 
 KappaPad is a two-button keypad intended for playing osu!. Unlike other keypads with mechanical switches, KappaPad has fixed metal pads and uses capacitive sensing to determine when they are being pressed. Because there is no key travel, one can minimize the distance their fingers move to conserve stamina during long streams.
 
-## Usage
+## How it works
 
-Just plug the KappaPad into a computer, and it should work as a USB keyboard
+* It uses capacitive sensors, the same kind of sensor your phone uses!
+* Here is a GIF that explains it
+![capacitive](./images/capacitive.gif)
+* Notice the delay between when the send pin is high to when the sense pin is high
+* That delay is what the keypad times, it counts the ammount of cpu cycles it takes for the pin to be high
+* the 10nF capacitor to ground simulates your finger, if this wasnt there then there would almost no delay 
 
 ## How to Make One
-
-Here is an example of how to build one, but you don't have to follow it exactly. Just use the materials you have on hand.
-
-<img src="./images/up.jpg" width=300/>
-<img src="./images/left.jpg" width=300/>
-<img src="./images/right.jpg" width=300/>
-
 ### Electronics
 
 * Breadboard
-* Arduino Leonardo (or any ATMega32u4 board)
-* 2x 330 kOhm Resistor
+* Compatible board (check `src` folder to see what MCU/Boards are supported)
+* 2x 330 kOhm Resistor (or similar)
 * Solid-Core Wire
-* 2 aluminum sheets
+* 2 Pads (Can be aluminum, coins, whatever)
 
-All of the electronics were connected by a small breadboard. An Arduino Leonardo was used. Other boards that can act as a USB keyboard can be used, such as Arduino Pro Micro, Arduino Zero, Arduino Due, and Teensy.
+### Building/Use
 
-### Software
+* Check the [list of compatible MCU/Boards](./src/).
+* Click the MCU/Board you want to use and read the instructions on how to build/use it
 
-The Arduino Sketch is located in the KappaPad directory of this repository.
+## Contributing
 
-* **Change the pins and keys you will use in `config.h`.**
-* **If your board doesn't have onboard LED on pin 13, you can change it to custom LED or proper onboard LED, or simply disable toggle led by setting it to -1**
-
-# **IF YOU ARE GONNA CHANGE KEYS, ONLY LOWERCASE ENGLISH ALPHABET IS SUPPORTED FOR OPTIMIZATIONS (a-z)**
-
-Upload the sketch to the board using the appropriate board type. (Use Arduino Leonardo if you have a Pro Micro.) After uploading, note that your board may recieve a different serial port number.
-
-At this point the keyboard may work, or the threshold values may have to be adjusted. If keys act like they are being held down and your computer is now unusable when the keypad is plugged in, enable serial output by uncommenting `SERIAL_DEBUG` and `DISABLE_KEYS` in `config.h`, that will show you the threshold the sensor is now, Read config.h on how to setup values, disable serial output again to improve performance.
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
