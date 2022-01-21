@@ -30,8 +30,8 @@ class Keyboard_ {
 
 	public:
 	Keyboard_(void);
-	void press(uint8_t k);
-	void release(uint8_t k);
+	void pressKey(uint8_t k);
+	void releaseKey(uint8_t k);
 	uint8_t getLedStatus();
 };
 extern Keyboard_ Keyboard;

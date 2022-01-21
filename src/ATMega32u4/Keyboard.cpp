@@ -19,7 +19,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "ArduinoKeyboard.h"
+#include "Keyboard.h"
 //================================================================================
 //================================================================================
 //	Keyboard
@@ -75,7 +75,7 @@ void Keyboard_::sendReport()
 // Because of the way USB HID works,
 // the host acts like the key remains pressed until we
 // call release(), or otherwise clear the report and resend.
-void Keyboard_::press(uint8_t k)
+void Keyboard_::pressKey(uint8_t k)
 {
     if (keys[0] == 0x00)
 	keys[0] = k;
@@ -88,7 +88,7 @@ void Keyboard_::press(uint8_t k)
 // release() takes the specified key out of the persistent key report and
 // sends the report. This tells the OS the key is no longer pressed and that
 // it shouldn't be repeated any more.
-void Keyboard_::release(uint8_t k)
+void Keyboard_::releaseKey(uint8_t k)
 {
     if (keys[0] == k)
 	keys[0] = 0x00;

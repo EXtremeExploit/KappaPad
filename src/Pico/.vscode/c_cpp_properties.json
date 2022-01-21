@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [],
+            "defines": [],
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "compilerPath": "/usr/bin/gcc",
+            "browse": {
+                "path": [
+                    "${PICO_SDK_PATH}/src/common/pico_stdlib/include/**",
+                    "${PICO_SDK_PATH}/lib/tinyusb/src/**"
+                ]
+            }
+        }
+    ],
+    "version": 4
+}
