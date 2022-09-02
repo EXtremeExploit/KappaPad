@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # initialize pico-sdk from submodule
 # note: this must happen before project()
-include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+include(external/pico-sdk/pico_sdk_import.cmake)
 
 project(pico-usb C CXX ASM)
 
